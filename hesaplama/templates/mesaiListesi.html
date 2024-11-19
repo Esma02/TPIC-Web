@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesai Kayıtları</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/s.css' %}" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+    margin: 0;
+    color: #000;
+    background: url("{% static 'img/ansayfa8.png' %}") no-repeat center center fixed;  /* anasayfa6*/ 
+    background-size: cover;
+
+        }
+        h2 {
+            color: #333;
+            text-align: center; /* Başlığı ortala */
+        }
+        .container {
+            display: flex;
+            justify-content: center; /* İçerikleri ortala */
+            padding: 20px;
+        }
+        .table-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            width: calc(100% - 300px); /* Sol ve sağ boşluklar için toplam 300px çıkarıldı */
+            max-width: 1000px; /* Maksimum genişlik ayarlaması */
+            margin: 0 150px; /* Sol ve sağdan 150px boşluk */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .long-text {
+            max-width: 200px;
+            word-wrap: break-word; 
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+        <!-- Logo ve Başlık -->
+        <a href="{% url 'mesai_view' %}" class="navbar-brand p-0">
+            <h1 class="text-primary m-0">TPIC</h1>
+        </a>
+    
+        <!-- Mobilde açılır menü simgesi -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+    
+        <!-- Navbar menüleri ve sağ tarafa yaslanmış butonlar -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto">
+                <a href="{% url 'mesai_view' %}" class="nav-item nav-link active">Anasayfa</a>
+                
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Menü</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="#" class="dropdown-item">Mesai Programı 1</a>
+                        <a href="#" class="dropdown-item">Mesai Programı 2</a>
+                        <a href="#" class="dropdown-item">Mesai Programı 3</a>
+                    </div>
+                </div>
+                
+                <a href="{% url 'mesai_kaydi' %}" class="nav-item nav-link">Mesai Kaydı</a>
+            </div>
+    
+            <div class="d-flex align-items-center ms-auto">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-outline-light ms-2">Çıkış Yap</a>
+                {% else %}
+                    <a href="{% url 'login_page' %}" class="btn btn-primary ms-2">Giriş Yap</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="table-container">
+            <h2>Mesai Kayıtları</h2>
+            {% if mesai_list %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sil</th>
+                            <th>Fazla Mesai Süresi</th>
+                            <th>Başlangıç Tarihi</th>
+                            <th>Bitiş Tarihi</th>
+                            <th>Mühendis</th>
+                            <th>Yapılan İş</th>
+                            <th>Kule Adı</th>
+                            <th>Kule Tipi</th>
+                            <th>Açıklama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mesai in mesai_list %}
+                        <tr>
+                            <td>
+                                <form action="{% url 'mesai_sil' mesai.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" onclick="return confirm('Bu kaydı silmek istediğinizden emin misiniz?')" class="delete-button">Sil</button>
+                                </form>
+                            </td>
+                            <td class="long-text">{{ mesai.sonuc }}</td>
+                            <td class="long-text">{{ mesai.baslangic_tarihi|date:"d.m.Y H:i" }}</td>
+                            <td class="long-text">{{ mesai.bitis_tarihi|date:"d.m.Y H:i" }}</td>
+                            <td class="long-text">{{ mesai.muhendis }}</td>
+                            <td class="long-text">{{ mesai.yapilan_is }}</td>
+                            <td class="long-text">{{ mesai.kule_adi }}</td>
+                            <td class="long-text">{{ mesai.kule_tipi }}</td>
+                            <td class="long-text">{{ mesai.aciklama }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+               
+            {% else %}
+                <p>Henüz mesai kaydınız bulunmamaktadır.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>

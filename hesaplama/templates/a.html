@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="message-container">
+        <div id="message">Bu bir bilgi mesajıdır!</div>
+    </div>
+    
+    <script>
+        // Sayfa yüklendikten sonra 2 saniye içinde mesajın kaybolmasını sağlayan fonksiyon
+        window.onload = function() {
+            setTimeout(function() {
+                const message = document.getElementById('message');
+                if (message) {
+                    message.style.transition = 'opacity 0.5s ease'; // Yavaşça kaybolma efekti
+                    message.style.opacity = '0'; // Görünürlüğü azalt
+    
+                    // Geçiş süresi sona erdikten sonra mesajı DOM'dan kaldır
+                    setTimeout(() => {
+                        message.remove();
+                    }, 500); // 500 ms geçiş süresine uygun
+                }
+            }, 2000); // 2000 ms bekledikten sonra kaybolma işlemi başlar
+        };
+    </script>
+    
+</body>
+</html>
